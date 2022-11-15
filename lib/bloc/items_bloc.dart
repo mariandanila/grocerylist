@@ -39,7 +39,7 @@ class ItemsBloc extends Bloc<ItemsEvent, ItemsState> {
             // stergerea elementului respectiv si adaugarea pe aceeasi pozitie
             int index = newList.indexOf(newList[i]);
             newList.removeAt(index);
-            newList.add(event.item);
+            newList.add(newItem);
           }
         }
         print('[ItemsBloc] Event finished...');

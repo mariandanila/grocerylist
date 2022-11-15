@@ -13,8 +13,6 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
-  void saveChanges() {}
-
   void popRoute() {
     Navigator.of(context).pop();
   }
@@ -33,10 +31,14 @@ class _EditPageState extends State<EditPage> {
         title: const Text('Edit item'),
         actions: [
           IconButton(
-              icon: Icon(Icons.save, color: Colors.white),
-              onPressed: () {
-                saveChanges();
-              }),
+            icon: Icon(Icons.save, color: Colors.white),
+            onPressed: () {
+              context.read<ItemsBloc>().add(
+                    UpdateItem(item: item),
+                  );
+              popRoute();
+            },
+          ),
         ],
         leading: const BackButton(color: Colors.white),
       ),

@@ -23,11 +23,10 @@ class RemoveItem extends ItemsEvent {
 }
 
 class UpdateItem extends ItemsEvent {
-  final int id;
   final GroceryItem item;
 
-  const UpdateItem({required this.id, required this.item});
+  const UpdateItem({required this.item});
 
   @override
-  List<Object> get props => [id, item];
+  List<Object> get props => [item];
 }
