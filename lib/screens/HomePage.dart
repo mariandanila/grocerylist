@@ -28,8 +28,7 @@ class _HomePageState extends State<HomePage> {
   void addItemToList(GlobalKey<FormState> formKey) {
     if (_formKey.currentState != null && _formKey.currentState!.validate()) {
       context.read<ItemsBloc>().add(AddItem(GroceryItem(
-          name: nameValue.text,
-          price: double.parse(priceValue.text))));
+          name: nameValue.text, price: double.parse(priceValue.text))));
     }
   }
 
@@ -67,6 +66,7 @@ class _HomePageState extends State<HomePage> {
                       child: const Text('save')),
                   Flexible(
                     child: ListView.builder(
+                      itemCount: state.items.length,
                       itemBuilder: (BuildContext context, index) {
                         return ListTile(
                           title: Text(state.items[index].name),

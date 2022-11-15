@@ -48,14 +48,12 @@ class _EditPageState extends State<EditPage> {
                 key: formKey,
                 child: TextFormField(
                   controller: nameValue,
-                  // initialValue: item.name,
                 ),
               ),
               Form(
                 key: formKey2,
                 child: TextFormField(
                   controller: priceValue,
-                  // initialValue: item.price.toString(),
                 ),
               ),
               ElevatedButton(
