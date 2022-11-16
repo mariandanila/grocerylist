@@ -33,6 +33,60 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void showOverlay(BuildContext context) async {
+    OverlayState? overlayState = Overlay.of(context);
+    OverlayEntry overlayEntry = OverlayEntry(
+      builder: (context) => Dialog(
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+        child: Container(
+          height: 200,
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Form(
+                  key: _formKey,
+                  child: TextFormField(
+                    controller: nameValue,
+                    decoration: InputDecoration(
+                      hintText: 'Enter item',
+                      suffixIcon: IconButton(
+                        onPressed: nameValue.clear,
+                        icon: Icon(Icons.clear),
+                      ),
+                    ),
+                  ),
+                ),
+                TextField(
+                  controller: priceValue,
+                  decoration: InputDecoration(
+                    labelText: 'Enter price',
+                    suffixIcon: IconButton(
+                      onPressed: priceValue.clear,
+                      icon: Icon(Icons.clear),
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      addItemToList(_formKey);
+                      nameValue.clear();
+                      priceValue.clear();
+                      FocusManager.instance.primaryFocus?.unfocus();
+                    },
+                    child: const Text('save')),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    overlayState!.insert(overlayEntry);
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -49,37 +103,12 @@ class _HomePageState extends State<HomePage> {
               margin: const EdgeInsets.only(left: 16, right: 16),
               child: Column(
                 children: [
-                  Form(
-                    key: _formKey,
-                    child: TextFormField(
-                      controller: nameValue,
-                      decoration: InputDecoration(
-                        hintText: 'Enter item',
-                        suffixIcon: IconButton(
-                          onPressed: nameValue.clear,
-                          icon: Icon(Icons.clear),
-                        ),
-                      ),
-                    ),
+                  FloatingActionButton(
+                    child: Icon(Icons.add),
+                    onPressed: () {
+                      showOverlay(context);
+                    },
                   ),
-                  TextField(
-                    controller: priceValue,
-                    decoration: InputDecoration(
-                      labelText: 'Enter price',
-                      suffixIcon: IconButton(
-                        onPressed: priceValue.clear,
-                        icon: Icon(Icons.clear),
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                      onPressed: () {
-                        addItemToList(_formKey);
-                        nameValue.clear();
-                        priceValue.clear();
-                        FocusManager.instance.primaryFocus?.unfocus();
-                      },
-                      child: const Text('save')),
                   Flexible(
                     child: ListView.separated(
                       itemCount: state.items.length,
