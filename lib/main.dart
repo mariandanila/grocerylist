@@ -11,8 +11,13 @@ void main() {
           create: (context) => ItemsBloc(),
         ),
       ],
-      child: MaterialApp(
-        home: HomePage(),
+      child: GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: MaterialApp(
+          home: HomePage(),
+        ),
       ),
     ),
   );

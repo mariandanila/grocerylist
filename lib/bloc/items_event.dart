@@ -24,8 +24,9 @@ class RemoveItem extends ItemsEvent {
 
 class UpdateItem extends ItemsEvent {
   final GroceryItem item;
+  final String? oldItem;
 
-  const UpdateItem({required this.item});
+  const UpdateItem({required this.item, this.oldItem});
 
   @override
   List<Object> get props => [item];

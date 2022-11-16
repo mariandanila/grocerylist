@@ -31,19 +31,15 @@ class ItemsBloc extends Bloc<ItemsEvent, ItemsState> {
 
     on<UpdateItem>(
       (event, emit) {
-        print('[ItemsBloc] Event received...');
         List<GroceryItem> newList = [...state.items];
-        GroceryItem newItem = event.item; //
         for (int i = 0; i < newList.length; i++) {
-          if (newList[i].name == event.item.name) {
+          if (newList[i].name == event.oldItem) {
             // stergerea elementului respectiv si adaugarea pe aceeasi pozitie
             int index = newList.indexOf(newList[i]);
             newList.removeAt(index);
-            newList.add(newItem);
+            newList.insert(index, event.item);
           }
         }
-        print('[ItemsBloc] Event finished...');
-        print('Updated list: $newList');
         emit(state.copyWith(items: newList));
       },
     );

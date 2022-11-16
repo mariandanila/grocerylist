@@ -13,6 +13,11 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
+  final formKey = GlobalKey<FormState>();
+  final formKey2 = GlobalKey<FormState>();
+  String updatedName = '';
+  double updatedPrice = 0.00;
+
   void popRoute() {
     Navigator.of(context).pop();
   }
@@ -21,9 +26,9 @@ class _EditPageState extends State<EditPage> {
   Widget build(BuildContext context) {
     final item = ModalRoute.of(context)!.settings.arguments as GroceryItem;
     final nameValue = TextEditingController(text: item.name);
-    final priceValue = TextEditingController(text: '${item.price}');
-    final formKey = GlobalKey<FormState>();
-    final formKey2 = GlobalKey<FormState>();
+    final priceValue = TextEditingController(text: item.price.toString());
+    dynamic newwItem;
+    String oldItem = item.name;
 
     return Scaffold(
       appBar: AppBar(
@@ -33,9 +38,10 @@ class _EditPageState extends State<EditPage> {
           IconButton(
             icon: Icon(Icons.save, color: Colors.white),
             onPressed: () {
-              context.read<ItemsBloc>().add(
-                    UpdateItem(item: item),
-                  );
+              newwItem = GroceryItem(name: updatedName, price: updatedPrice);
+              context
+                  .read<ItemsBloc>()
+                  .add(UpdateItem(item: newwItem, oldItem: oldItem));
               popRoute();
             },
           ),
@@ -49,14 +55,31 @@ class _EditPageState extends State<EditPage> {
               Form(
                 key: formKey,
                 child: TextFormField(
+                  onChanged: (value) {
+                    updatedName = value;
+                  },
                   controller: nameValue,
+                  decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                      onPressed: nameValue.clear,
+                      icon: Icon(Icons.clear),
+                    ),
+                  ),
                 ),
               ),
               Form(
                 key: formKey2,
                 child: TextFormField(
-                  controller: priceValue,
-                ),
+                    onChanged: (value) {
+                      updatedPrice = double.parse(value);
+                    },
+                    controller: priceValue,
+                    decoration: InputDecoration(
+                      suffixIcon: IconButton(
+                        onPressed: priceValue.clear,
+                        icon: Icon(Icons.clear),
+                      ),
+                    )),
               ),
               ElevatedButton(
                 onPressed: () {

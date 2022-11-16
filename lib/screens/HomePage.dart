@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,6 +38,7 @@ class _HomePageState extends State<HomePage> {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text('Grocery list'),
       ),
       body: BlocBuilder<ItemsBloc, ItemsState>(
@@ -50,22 +52,36 @@ class _HomePageState extends State<HomePage> {
                   Form(
                     key: _formKey,
                     child: TextFormField(
-                        controller: nameValue,
-                        decoration: InputDecoration(
-                          hintText: 'Enter item',
-                        )),
+                      controller: nameValue,
+                      decoration: InputDecoration(
+                        hintText: 'Enter item',
+                        suffixIcon: IconButton(
+                          onPressed: nameValue.clear,
+                          icon: Icon(Icons.clear),
+                        ),
+                      ),
+                    ),
                   ),
                   TextField(
                     controller: priceValue,
-                    decoration: InputDecoration(labelText: 'Enter price'),
+                    decoration: InputDecoration(
+                      labelText: 'Enter price',
+                      suffixIcon: IconButton(
+                        onPressed: priceValue.clear,
+                        icon: Icon(Icons.clear),
+                      ),
+                    ),
                   ),
                   ElevatedButton(
                       onPressed: () {
                         addItemToList(_formKey);
+                        nameValue.clear();
+                        priceValue.clear();
+                        FocusManager.instance.primaryFocus?.unfocus();
                       },
                       child: const Text('save')),
                   Flexible(
-                    child: ListView.builder(
+                    child: ListView.separated(
                       itemCount: state.items.length,
                       itemBuilder: (BuildContext context, index) {
                         return ListTile(
@@ -84,6 +100,10 @@ class _HomePageState extends State<HomePage> {
                           },
                         );
                       },
+                      separatorBuilder: (BuildContext context, int index) =>
+                          const Divider(
+                              thickness: 1,
+                              color: Color.fromARGB(255, 119, 66, 66)),
                     ),
                   ),
                 ],
