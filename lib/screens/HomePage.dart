@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocerylist/bloc/items_bloc.dart';
+import 'package:grocerylist/components/FormInput.dart';
 import 'package:grocerylist/models/GroceryItemModel.dart';
 import 'package:grocerylist/screens/EditPage.dart';
 
@@ -33,52 +34,120 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void _showModalContent() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          titlePadding: EdgeInsets.zero,
+          contentPadding: EdgeInsets.zero,
+          insetPadding: const EdgeInsets.only(
+            left: 16,
+            right: 16,
+          ),
+          // shape: const CircleBorder(),
+          children: [
+            SizedBox(
+              height: 200,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Form(
+                      key: _formKey,
+                      child: TextFormField(
+                        controller: nameValue,
+                        decoration: InputDecoration(
+                          hintText: 'Enter item',
+                          suffixIcon: IconButton(
+                            onPressed: nameValue.clear,
+                            icon: Icon(Icons.clear),
+                          ),
+                        ),
+                      ),
+                    ),
+                    TextField(
+                      controller: priceValue,
+                      decoration: InputDecoration(
+                        labelText: 'Enter price',
+                        suffixIcon: IconButton(
+                          onPressed: priceValue.clear,
+                          icon: Icon(Icons.clear),
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                        onPressed: () {
+                          addItemToList(_formKey);
+                          nameValue.clear();
+                          priceValue.clear();
+                          FocusManager.instance.primaryFocus?.unfocus();
+                        },
+                        child: const Text('save')),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void showOverlay(BuildContext context) async {
     OverlayState? overlayState = Overlay.of(context);
     OverlayEntry overlayEntry = OverlayEntry(
-      builder: (context) => Dialog(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-        child: Container(
-          height: 200,
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Form(
-                  key: _formKey,
-                  child: TextFormField(
-                    controller: nameValue,
-                    decoration: InputDecoration(
-                      hintText: 'Enter item',
-                      suffixIcon: IconButton(
-                        onPressed: nameValue.clear,
-                        icon: Icon(Icons.clear),
+      builder: (context) => GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        child: Align(
+          alignment: Alignment.center,
+          child: Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)),
+            child: Container(
+              height: 200,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Form(
+                      key: _formKey,
+                      child: TextFormField(
+                        controller: nameValue,
+                        decoration: InputDecoration(
+                          hintText: 'Enter item',
+                          suffixIcon: IconButton(
+                            onPressed: nameValue.clear,
+                            icon: Icon(Icons.clear),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                TextField(
-                  controller: priceValue,
-                  decoration: InputDecoration(
-                    labelText: 'Enter price',
-                    suffixIcon: IconButton(
-                      onPressed: priceValue.clear,
-                      icon: Icon(Icons.clear),
+                    TextField(
+                      controller: priceValue,
+                      decoration: InputDecoration(
+                        labelText: 'Enter price',
+                        suffixIcon: IconButton(
+                          onPressed: priceValue.clear,
+                          icon: Icon(Icons.clear),
+                        ),
+                      ),
                     ),
-                  ),
+                    ElevatedButton(
+                        onPressed: () {
+                          addItemToList(_formKey);
+                          nameValue.clear();
+                          priceValue.clear();
+                          FocusManager.instance.primaryFocus?.unfocus();
+                        },
+                        child: const Text('save')),
+                  ],
                 ),
-                ElevatedButton(
-                    onPressed: () {
-                      addItemToList(_formKey);
-                      nameValue.clear();
-                      priceValue.clear();
-                      FocusManager.instance.primaryFocus?.unfocus();
-                    },
-                    child: const Text('save')),
-              ],
+              ),
             ),
           ),
         ),
@@ -97,45 +166,70 @@ class _HomePageState extends State<HomePage> {
       ),
       body: BlocBuilder<ItemsBloc, ItemsState>(
         builder: (context, state) {
-          return SingleChildScrollView(
-            child: Container(
-              height: height,
-              margin: const EdgeInsets.only(left: 16, right: 16),
-              child: Column(
-                children: [
-                  FloatingActionButton(
-                    child: Icon(Icons.add),
-                    onPressed: () {
-                      showOverlay(context);
-                    },
-                  ),
-                  Flexible(
-                    child: ListView.separated(
-                      itemCount: state.items.length,
-                      itemBuilder: (BuildContext context, index) {
-                        return ListTile(
-                          title: Text(state.items[index].name),
-                          trailing: Text('\$${state.items[index].price}'),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const EditPage(),
-                                settings: RouteSettings(
-                                  arguments: state.items[index],
-                                ),
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            child: SingleChildScrollView(
+              child: Container(
+                height: height,
+                margin: const EdgeInsets.only(left: 16, right: 0),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(height: 15),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          OutlinedButton(
+                            child: Text(
+                              'Add item',
+                              style: TextStyle(fontSize: 20.0),
+                            ),
+                            onPressed: () {
+                              _showModalContent();
+                            },
+                          ),
+                          Image.asset(
+                            'lib/icons/grocery-cart.png',
+                            height: 50,
+                          ),
+                        ],
+                      ),
+                      Flexible(
+                        child: ListView.separated(
+                          itemCount: state.items.length,
+                          itemBuilder: (BuildContext context, index) {
+                            return Dismissible(
+                              key: UniqueKey(),
+                              onDismissed: (direction) {
+                                context.read<ItemsBloc>().add(
+                                      RemoveItem(state.items[index]),
+                                    );
+                              },
+                              child: ListTile(
+                                title: Text(state.items[index].name),
+                                trailing: Text('\$${state.items[index].price}'),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const EditPage(),
+                                      settings: RouteSettings(
+                                        arguments: state.items[index],
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             );
                           },
-                        );
-                      },
-                      separatorBuilder: (BuildContext context, int index) =>
-                          const Divider(
-                              thickness: 1,
-                              color: Color.fromARGB(255, 119, 66, 66)),
-                    ),
-                  ),
-                ],
+                          separatorBuilder: (BuildContext context, int index) =>
+                              const Divider(
+                                  thickness: 1,
+                                  color: Color.fromARGB(255, 119, 66, 66)),
+                        ),
+                      ),
+                    ]),
               ),
             ),
           );
