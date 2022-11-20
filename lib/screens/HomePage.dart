@@ -195,48 +195,52 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     SizedBox(height: 15),
-                          if (state.items.isEmpty) ...[
-                            Text('Your grocery list is empty.'),
-                           ] else ...[
-                            Flexible(
-                              child: ListView.separated(
-                                itemCount: state.items.length,
-                                itemBuilder: (BuildContext context, index) {
-                                  return Dismissible(
-                                    key: UniqueKey(),
-                                    onDismissed: (direction) {
-                                      context.read<ItemsBloc>().add(
-                                            RemoveItem(state.items[index]),
-                                          );
-                                    },
-                                    child: ListTile(
-                                      title: Text(state.items[index].name),
-                                      trailing:
-                                          Text('\$${state.items[index].price}'),
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const EditPage(),
-                                            settings: RouteSettings(
-                                              arguments: state.items[index],
-                                            ),
-                                          ),
-                                        );
-                                      },
+                    if (state.items.isEmpty) ...[
+                      Text('Your grocery list is empty.'),
+                    ] else ...[
+                      Flexible(
+                        child: ListView.separated(
+                          itemCount: state.items.length,
+                          itemBuilder: (BuildContext context, index) {
+                            return Dismissible(
+                              key: UniqueKey(),
+                              onDismissed: (direction) {
+                                context.read<ItemsBloc>().add(
+                                      RemoveItem(state.items[index]),
+                                    );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('${state.items[index].name}'),
+                                  ),
+                                );
+                              },
+                              background: Container(
+                                color: Color.fromARGB(255, 255, 162, 150)
+                              ),
+                              child: ListTile(
+                                title: Text(state.items[index].name),
+                                trailing: Text('\$${state.items[index].price} removed'),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const EditPage(),
+                                      settings: RouteSettings(
+                                        arguments: state.items[index],
+                                      ),
                                     ),
                                   );
                                 },
-                                separatorBuilder: (BuildContext context,
-                                        int index) =>
-                                    const Divider(
-                                        thickness: 1,
-                                        color: Color.fromARGB(255, 119, 66, 66)),
-                              
                               ),
-                            ),
-                           ]
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) =>
+                              const Divider(
+                                  thickness: 1,
+                                  color: Color.fromARGB(255, 119, 66, 66)),
+                        ),
+                      ),
+                    ]
                   ],
                 ),
               ),
