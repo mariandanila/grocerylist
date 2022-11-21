@@ -210,13 +210,13 @@ class _HomePageState extends State<HomePage> {
                                     );
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: Text('${state.items[index].name} removed'),
+                                    content: Text(
+                                        '${state.items[index].name} removed'),
                                   ),
                                 );
                               },
                               background: Container(
-                                color: Color.fromARGB(255, 255, 162, 150)
-                              ),
+                                  color: Color.fromARGB(255, 255, 162, 150)),
                               child: ListTile(
                                 title: Text(state.items[index].name),
                                 trailing: Text('\$${state.items[index].price}'),
