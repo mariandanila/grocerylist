@@ -210,7 +210,7 @@ class _HomePageState extends State<HomePage> {
                                     );
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: Text('${state.items[index].name}'),
+                                    content: Text('${state.items[index].name} removed'),
                                   ),
                                 );
                               },
@@ -219,7 +219,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               child: ListTile(
                                 title: Text(state.items[index].name),
-                                trailing: Text('\$${state.items[index].price} removed'),
+                                trailing: Text('\$${state.items[index].price}'),
                                 onTap: () {
                                   Navigator.push(
                                     context,
